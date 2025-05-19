@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transcripción de Voz</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 20px 0;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        #transcriptionArea {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            min-height: 50px;
+            background-color: #f9f9f9;
+            text-align: left;
+            white-space: pre-wrap; /* Para mantener los saltos de línea y espacios */
+        }
+        .status {
+            margin-top: 15px;
+            font-style: italic;
+            color: #555;
+            min-height: 1.2em; /* Para evitar saltos cuando el texto aparece/desaparece */
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Transcripción de Voz a Texto</h1>
+        <p>Presiona el botón y habla. Asegúrate de que tu micrófono esté habilitado.</p>
+        <button id="recordButton">Grabar y Transcribir</button>
+        <div id="statusMessage" class="status"></div>
+        <h2>Texto Transcrito:</h2>
+        <div id="transcriptionArea">Esperando transcripción...</div>
+    </div>
+
+<script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</body>
+</html>

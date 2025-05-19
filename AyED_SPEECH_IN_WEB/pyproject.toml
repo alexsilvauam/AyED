@@ -1,0 +1,26 @@
+# pyproject.toml
+
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+backend-path = ["."]
+
+[project]
+name = "SPEECH_IN_WEB"
+dynamic = ["version"]
+
+[tool.setuptools.dynamic]
+version = {attr = "app.__version__"}
+
+[tool.semantic_release]
+version_variables = [
+    "app.py:__version__",
+]
+upload_to_pypi = false
+upload_to_release = true
+changelog_style = "keepachangelog"
+changelog_file = "CHANGELOG.md"
+commit_parser_options = { allowed_tags = ["^build", "^chore", "^ci", "^docs", "^feat", "^fix", "^perf", "^style", "^refactor", "^test"] }
+
+[tool.semantic_release.branches.main]
+match = "master"

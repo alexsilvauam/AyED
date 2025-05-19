@@ -1,0 +1,42 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          tags: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Commitizen
+        run: pip install commitizen
+
+      - name: Set Git user email
+        run: git config --global user.email "silvaajc@uamv.edu.ni"
+
+      - name: Set Git user name
+        run: git config --global user.name "alexsilvauam"
+
+      - name: Semantic Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: cz bump --changelog --yes
+
+      - name: Push changes (changelog and tags)
+        run: |
+          git push origin HEAD:master
+          git push origin --tags
+          
