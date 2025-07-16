@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reconocimiento Facial</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="h1 text-center mb-4">Reconocimiento Facial</h1>
+        <div class="d-flex justify-content-center mb-4">
+            <video id="video" width="380" height="380" autoplay class="rounded-circle border border-secondary"></video>
+        </div>
+        <div class="mb-3">
+            <input type="text" id="name" class="form-control" placeholder="Ingrese su nombre">
+        </div>
+        <div class="d-flex justify-content-center mb-3">
+            <button id="register" class="btn btn-primary me-2">Registrar Cara</button>
+            <button id="authenticate" class="btn btn-success">Autenticar</button>
+        </div>
+        <p id="message" class="text-center"></p>
+    </div>
+
+    <script>
+        const video = document.getElementById("video");
+        const registerBtn = document.getElementById("register");
+        const authenticateBtn = document.getElementById("authenticate");
+        const nameInput = document.getElementById("name");
+        const message = document.getElementById("message");
+
+        // Acceder a la cámara
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(err => {
+                message.textContent = "Error al acceder a la cámara: " + err.message;
+            });
+
+        // Capturar imagen del video
+        function captureImage() {
+            const canvas = document.createElement("canvas");
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const context = canvas.getContext("2d");
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            return canvas.toDataURL("image/jpeg");
+        }
+
+        // Registrar una nueva cara
+        registerBtn.addEventListener("click", async () => {
+            const name = nameInput.value;
+            if (!name) {
+                message.textContent = "Por favor, ingrese un nombre.";
+                return;
+            }
+
+            const image = captureImage();
+            const response = await fetch("/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, image }),
+            });
+
+            const result = await response.json();
+            message.textContent = result.success ? result.message : result.error;
+        });
+
+        // Autenticar usuario
+        authenticateBtn.addEventListener("click", async () => {
+            const image = captureImage();
+            const response = await fetch("/authenticate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ image }),
+            });
+
+            const result = await response.json();
+            if (result.success) {
+            message.textContent = `Bienvenido, ${result.name}!`;
+            window.location.href = "/home";
+            } else {
+            message.textContent = result.error;
+            }
+        });
+    </script>
+</body>
+
+</html>

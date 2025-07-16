@@ -1,0 +1,40 @@
+# pyproject.toml
+
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+backend-path = ["."]
+
+[project]
+name = "Speech_In_Web"  # Cambia esto por el nombre de tu proyecto
+dynamic = ["version"]
+
+[tool.setuptools.dynamic]
+version = {attr = "app.__version__"} # Aquí le decimos que busque __version__ en app.py
+
+[tool.semantic_release]
+# Dónde se almacena la versión actual de tu paquete.
+version_variables = [
+    "app.py:__version__", # Ajustado para app.py
+]
+
+# Sube los archivos de distribución a PyPI (ponlo en 'true' si quieres publicar)
+upload_to_pypi = false
+# Sube a un repositorio de releases (ej. GitHub Releases) (ponlo en 'true' si quieres)
+upload_to_release = false
+
+# Estilo del changelog. "keepachangelog" es el formato estándar.
+changelog_style = "keepachangelog"
+# Archivo del changelog
+changelog_file = "CHANGELOG.md"
+
+# Comando para construir tu paquete (opcional, si es una app simple, quizás no necesites construir un wheel)
+# Para una app Flask simple, podrías dejarlo comentado o eliminarlo si no vas a construir un paquete.
+# build_command = "pip install build && python -m build"
+
+# Configuración para la rama principal (ajusta 'main' si usas 'master' u otra)
+[tool.semantic_release.branches.main]
+match = "main" # o "master" si esa es tu rama principal
+
+# Para asegurar que el commit de release no dispare otra release en CI
+commit_parser_options = { "allowed_tags": ["^build", "^chore", "^ci", "^docs", "^feat", "^fix", "^perf", "^style", "^refactor", "^test"] }
